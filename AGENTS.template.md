@@ -10,6 +10,7 @@ This file provides guidance to AI coding agents working in this repository.
 @.guidelines/webrtc.md
 @.guidelines/web-frontend.md
 @.guidelines/testing-and-docs.md
+@.guidelines/process.md
 
 ---
 
