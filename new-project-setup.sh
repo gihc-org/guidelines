@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Sæt et nyt projekt op med guidelines og AGENTS.md-skelet.
 # Kør fra projektets rodmappe: bash ~/projects/guidelines/new-project-setup.sh
+#
+# Hvis guidelines ikke er klonet endnu:
+#   git clone https://github.com/gihc-org/guidelines ~/projects/guidelines
 
 set -e
 
