@@ -10,6 +10,7 @@ Generelle kodningsregler og mønstre til brug på tværs af projekter. Designet 
 | [rust-axum.md](rust-axum.md) | Axum, SQLx, rustls, lib/bin-split, WebSocket-auth |
 | [webrtc.md](webrtc.md) | TURN/STUN, rejoin-håndtering, delt RTCPeerConnection, opkalds-flow |
 | [web-frontend.md](web-frontend.md) | CSS/JS-gotchas, autoplay, MediaStream |
+| [testing-and-docs.md](testing-and-docs.md) | Testniveauer, grænsetilfælde, smoke test, dokumentationspraksis |
 
 ## Brug i et nyt projekt
 
