@@ -12,6 +12,7 @@ Generelle kodningsregler og mønstre til brug på tværs af projekter. Designet 
 | [web-frontend.md](web-frontend.md) | CSS/JS-gotchas, autoplay, MediaStream |
 | [testing-and-docs.md](testing-and-docs.md) | Testniveauer, grænsetilfælde, smoke test, dokumentationspraksis |
 | [process.md](process.md) | Features i TODO før implementering; ADR/guideline-vurdering efter commit |
+| [claude-code.md](claude-code.md) | Claude Code hooks: referat-påmindelse ved sessionslut |
 
 ## Brug i et nyt projekt
 
