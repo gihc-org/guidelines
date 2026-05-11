@@ -22,6 +22,27 @@ Ingen tilfældig rækkefølge, ingen afhængighed af systemtid uden at mocke den
 
 Kør en minimal smoke test mod produktion efter hvert deploy der verificerer at de vigtigste endpoints svarer korrekt. Fejl i smoke testen skal stoppe deployet.
 
+### Hvert miljø skal have sin egen database
+
+Når test, beta og produktion deler én PostgreSQL-container, skal de bruge **separate databaser** — ikke den samme. E2e-tests opretter og sletter data; hvis de rammer prod-databasen direkte, forurenes den med testbrugere og testrumsnavne.
+
+```yaml
+# docker-compose.prod.yml
+chat-test:
+  environment:
+    DATABASE_URL: postgres://...@postgres:5432/chatdb_test  # ikke chatdb
+```
+
+Psql-gotcha: `CREATE DATABASE` skal forbinde til en eksisterende database. Brug maintenance-databasen:
+```bash
+psql -U chatuser -d postgres -c "CREATE DATABASE chatdb_test"
+# -d postgres er påkrævet — chatuser-databasen eksisterer ikke per default
+```
+
+### E2e-tests skal rydde op efter sig
+
+Slet testbrugere og testdata via API'et efter hvert testforløb — ikke direkte i databasen. Brug `DELETE /auth/me` (eller tilsvarende) i `afterEach`/`afterAll`. Forudsætter at API'et understøtter GDPR-sletning.
+
 ## Dokumentation
 
 ### AGENTS.md er den primære kilde
