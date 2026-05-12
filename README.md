@@ -13,6 +13,7 @@ Generelle kodningsregler og mønstre til brug på tværs af projekter. Designet 
 | [testing-and-docs.md](testing-and-docs.md) | Testniveauer, grænsetilfælde, smoke test, dokumentationspraksis |
 | [process.md](process.md) | Features i TODO før implementering; ADR/guideline-vurdering efter commit |
 | [claude-code.md](claude-code.md) | Claude Code hooks: referat-påmindelse ved sessionslut |
+| [ansible-deploy.md](ansible-deploy.md) | DNS-propagering, Caddy TLS-timing, lokal cache-diagnostik |
 
 ## Brug i et nyt projekt
 
