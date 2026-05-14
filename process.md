@@ -25,3 +25,15 @@ Når en feature eller delopgave er implementeret og committed, vurderer AI *på 
 - En best practice der ikke allerede er dokumenteret
 
 Vurderingen behøver ikke resultere i handling — men den skal altid foretages og konklusionen kommunikeres kort ("ingen ny ADR nødvendig her" er et gyldigt svar).
+
+## Skriv et referat ved afslutning af sessionen
+
+Når en arbejdssession afsluttes, skrives et kort referat i `./referater/` med filnavnet `YYYY-MM-DD-HH-MM.md` (24-timers ur).
+
+Referatet skal indeholde:
+- Hvad blev lavet og committet
+- Beslutninger der blev truffet og kort hvorfor
+- Kendte uafklarede spørgsmål eller næste skridt
+- Eventuelle gotchas der dukkede op undervejs
+
+Formålet er at give næste sessions AI og menneske et fælles udgangspunkt uden at skulle genlæse hele git-historikken. Se også [knowledge-management.md](knowledge-management.md).
