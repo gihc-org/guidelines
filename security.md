@@ -44,6 +44,7 @@ Ved nye Docker-services:
 
 ## JWT
 
-- Brug HS256 med et stærkt random secret (min. 256 bit)
+- **Interne services (én udsteder + én validator):** Brug HS256 med et stærkt random secret (min. 256 bit)
+- **OIDC Authorization Server:** Brug RS256 (RSA 2048-bit) — resource servers verificerer via `/.well-known/jwks.json` uden at kende den private nøgle. Se [ADR-0023](../../adrs/0023-rs256-oidc-server.md).
 - WebSocket auth via query-parameter (`?token=<jwt>`) — browser kan ikke sætte custom headers på WS upgrade
 - Overvej `httpOnly`-cookie frem for `localStorage` for at reducere XSS-risiko
