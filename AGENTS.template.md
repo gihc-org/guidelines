@@ -11,6 +11,9 @@ This file provides guidance to AI coding agents working in this repository.
 @.guidelines/web-frontend.md
 @.guidelines/testing-and-docs.md
 @.guidelines/process.md
+@.guidelines/knowledge-management.md
+@.guidelines/claude-code.md
+@.guidelines/ansible-deploy.md
 
 ---
 
