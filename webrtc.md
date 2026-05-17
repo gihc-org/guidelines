@@ -34,6 +34,71 @@ Til 1:1-rum: del én `RTCPeerConnection` mellem flere medietyper (fx skærmdelin
 
 Ved renegotiering: detect at PC allerede er forbundet (`pc.connectionState === 'connected'`) og spring `createPeerConnection()` over.
 
+## DataChannels på en delt RTCPeerConnection: onnegotiationneeded + pendingOffer
+
+Når en `RTCDataChannel` oprettes på en PC der allerede er forbundet for media (screen share / audio), kan SCTP ikke være sat op i den originale SDP. Brug `onnegotiationneeded` til automatisk renegotiering — men undgå dobbelt offer ved at sætte et `pendingOffer`-flag inden eksplicit `createOffer()`:
+
+```javascript
+let pendingOffer = false;
+
+function createPeerConnection() {
+  pc = new RTCPeerConnection({ iceServers });
+
+  pc.onnegotiationneeded = async () => {
+    if (pendingOffer || pc.signalingState !== 'stable') return;
+    try {
+      pendingOffer = true;
+      const offer = await pc.createOffer();
+      if (pc.signalingState !== 'stable') return; // check igen efter await
+      await pc.setLocalDescription(offer);
+      sendSignal({ type: 'offer', sdp: pc.localDescription });
+    } finally {
+      pendingOffer = false;
+    }
+  };
+
+  pc.ondatachannel = e => { /* modtag fil-transfer DataChannel */ };
+}
+
+// Sæt flag inden addTrack() så onnegotiationneeded ikke løber i kappestrid med explicit createOffer()
+async function startScreenShare() {
+  pendingOffer = true;
+  pc.addTrack(...);
+  try {
+    const offer = await pc.createOffer();
+    // ...
+  } finally {
+    pendingOffer = false;
+  }
+}
+```
+
+`onnegotiationneeded` fyrer synkront ved `addTrack()` / `createDataChannel()`, men handleren kører asynkront — uden `pendingOffer`-guard kan begge paths kalde `createOffer()` næsten samtidig.
+
+## Automatisk genforsøg ved WebRTC-forbindelsesfejl
+
+`failed`-tilstand er permanent — browser genetablerer ikke på egen hånd. `disconnected` er transient og kan self-recovere. Håndtér begge i `onconnectionstatechange`:
+
+```javascript
+pc.onconnectionstatechange = () => {
+  const state = pc.connectionState;
+  if (state === 'disconnected' || state === 'failed') {
+    // ryd op i UI ...
+    if (sharing) {
+      const thisPc = pc;
+      const delay = state === 'failed' ? 2000 : 10000;
+      setTimeout(() => {
+        if (pc === thisPc && sharing && pc.connectionState !== 'connected') {
+          reinitiateOffer();
+        }
+      }, delay);
+    }
+  }
+};
+```
+
+`pc === thisPc`-tjekket sikrer at timeoutet ikke kører hvis PC'en allerede er erstattet af en manuel genoprettelse. Hvis WS aldrig gik ned (og ingen ny `join`-besked sendes), er dette den eneste måde forbindelsen genetableres på.
+
 ## Opkald: send offer efter accept, ikke med det samme
 
 Caller sender ikke WebRTC offer ved `call-invite` — først når callee sender `call-accept`. Undgår ICE-gathering og TURN-allokering for opkald der afvises.
