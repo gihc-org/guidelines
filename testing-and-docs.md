@@ -2,6 +2,12 @@
 
 ## Test
 
+### Tests skrives som kode — aldrig som engangskommandoer
+
+Tests skal altid skrives som kørbar kode i projektets testmappe (`tests/`, `src/`, eller tilsvarende) — ikke som inline shell-kommandoer der køres én gang og smides væk. En test der ikke kan genafvikles er ikke en test, men en manuel verifikation.
+
+Når en ny feature implementeres: skriv testene i samme commit. Kørbarhed verificeres med `uv run pytest`, `cargo test`, eller projektets testkommando.
+
 ### Dæk de tre niveauer
 
 - **Unit tests** — isolerede funktioner og datamodeller; ingen I/O, ingen netværk
