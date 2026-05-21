@@ -107,3 +107,64 @@ Signal-flow:
 ```
 call-invite → call-accept/call-reject → offer → answer → ICE-kandidater → call-end
 ```
+
+## Diagnostik: synlig state + struktureret logging
+
+WebRTC-drops er svære at debugge fordi tilstanden er distribueret over flere state-maskiner (`connectionState`, `iceConnectionState`, `signalingState`, `iceGatheringState`) og fordi browseren self-recoverer i nogle tilfælde men ikke andre. Gør tilstanden synlig **inden** den næste fejl, ikke efter.
+
+### En `logRtc()`-helper med tidsstempel
+
+```javascript
+const rtcStartTime = performance.now();
+function logRtc(event, data) {
+  const t = ((performance.now() - rtcStartTime) / 1000).toFixed(2);
+  if (data === undefined) console.log(`[webrtc +${t}s] ${event}`);
+  else console.log(`[webrtc +${t}s] ${event}`, data);
+}
+```
+
+Prefiks `[webrtc]` gør det trivielt at filtrere i DevTools. Relativ tid (`+12.34s`) er nemmere at læse end wall-clock og afslører rækkefølger på tværs af events.
+
+### Wire logging op på alle state-maskiner
+
+Hver `RTCPeerConnection` skal have callbacks på alle fire state-events plus ICE-fejl:
+
+```javascript
+pc.onconnectionstatechange   = () => logRtc('connection-state',   { state: pc.connectionState });
+pc.oniceconnectionstatechange= () => logRtc('ice-connection-state',{ state: pc.iceConnectionState });
+pc.onicegatheringstatechange = () => logRtc('ice-gathering-state',{ state: pc.iceGatheringState });
+pc.onsignalingstatechange    = () => logRtc('signaling-state',    { state: pc.signalingState });
+pc.onicecandidateerror       = e  => logRtc('ice-candidate-error',{
+  errorCode: e.errorCode, errorText: e.errorText, url: e.url,
+});
+```
+
+`onicecandidateerror` er særligt vigtig — det er typisk hvor TURN-fejl viser sig (forkert credential, TURN ikke nåelig, port blokeret).
+
+Log også **beslutninger**, ikke kun events: når et auto-genforsøg planlægges, når det udløses eller springes over (med grund), når et offer er for nyt til reinit. Det er disse beslutninger der senere afslører hvorfor forbindelsen ikke kom tilbage.
+
+### Synligt state-felt i UI'en
+
+Et lille pill-element i nav-bjælken der viser `RTC: <state> · ICE: <state>` med farvekodning (grøn=connected, gul=connecting, orange=disconnected, rød=failed). Når et auto-genforsøg er planlagt, vis live nedtælling (`genforsøg om Xs`). Pillen er kun synlig når en PC er aktiv.
+
+Brugeren kan se forbindelsen falde ud i realtid — og kan skelne mellem "WS-blip" (ws-statuslinjen viser reconnect) og "WebRTC-drop" (pillen skifter farve).
+
+### `window.rtcDump()` til ad-hoc inspektion
+
+Eksponér en global funktion der printer øjebliksbillede af PC:
+
+```javascript
+window.rtcDump = () => {
+  if (!pc) return null;
+  return {
+    connectionState: pc.connectionState,
+    iceConnectionState: pc.iceConnectionState,
+    signalingState: pc.signalingState,
+    senders: pc.getSenders().map(s => ({ kind: s.track?.kind, readyState: s.track?.readyState })),
+    receivers: pc.getReceivers().map(r => ({ kind: r.track?.kind, readyState: r.track?.readyState })),
+    /* projekt-specifikke flags: sharing, inCall, pendingOffer, ... */
+  };
+};
+```
+
+Når brugeren oplever et drop kan de åbne konsollen og køre `rtcDump()` — én linje, fuld tilstand. Bedre end at bede dem screenshotte chrome://webrtc-internals.
