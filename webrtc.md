@@ -75,6 +75,32 @@ async function startScreenShare() {
 
 `onnegotiationneeded` fyrer synkront ved `addTrack()` / `createDataChannel()`, men handleren kører asynkront — uden `pendingOffer`-guard kan begge paths kalde `createOffer()` næsten samtidig.
 
+## Ryd ikke `srcObject` ved transient disconnect
+
+`connectionState === 'disconnected'` er transient og self-recoverer typisk på ~10ms (ICE consent freshness). Hvis modtagerens `onconnectionstatechange`-handler rydder video-elementet (`remoteVideo.srcObject = null`) ved enhver disconnect, sker dette:
+
+1. ICE-blip på 10ms → state-event fyrer med `disconnected` → handler rydder `srcObject`
+2. ICE recoverer → state-event fyrer med `connected` igen
+3. Men intet repopulerer `srcObject` — `pc.ontrack` fyrer kun ved *nye* tracks, ikke når en eksisterende reaktiverer
+4. Modtager sidder med sort skærm trods `connected` på begge sider, og **kun hard refresh fikser det** (ny PC → ny ontrack)
+
+Rydning af `srcObject` skal kun ske ved `failed` (permanent) eller eksplicit `close`-signal fra peer. På `disconnected` lader vi video-elementet være — den pauser visningen mens pakker mangler og resumer automatisk når de flyder igen. Sidste viste frame er bedre UX end sort skærm under en 10ms blip.
+
+```javascript
+pc.onconnectionstatechange = () => {
+  const state = pc.connectionState;
+  if (state === 'failed') {
+    closePeerVideo();      // permanent — ryd op
+    if (inCall) hangUp();
+  }
+  if ((state === 'disconnected' || state === 'failed') && sharing) {
+    scheduleRetry(state === 'failed' ? 2000 : 10000);
+  }
+};
+```
+
+Samme princip for opkald: et 10ms blip skal ikke kalde `hangUp()` (som også sender `call-end` til peer og lægger på permanent). Kun `failed` ender opkaldet.
+
 ## Automatisk genforsøg ved WebRTC-forbindelsesfejl
 
 `failed`-tilstand er permanent — browser genetablerer ikke på egen hånd. `disconnected` er transient og kan self-recovere. Håndtér begge i `onconnectionstatechange`:
