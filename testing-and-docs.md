@@ -1,5 +1,31 @@
 # Test og dokumentation
 
+> **AI-agent? Læs først dette afsnit.**
+> Inden du melder en opgave færdig: gå hele tjeklisten nedenfor igennem
+> eksplicit og angiv for hvert punkt om det er opfyldt eller ej. Det er
+> ikke nok at have læst guidelines passivt — du skal aktivt verificere.
+
+## Tjekliste før commit
+
+Den korte version. Detaljer i sektionerne nedenfor.
+
+**Kode og test:**
+- [ ] Tests skrevet som kørbar kode i projektets testmappe (ikke ad-hoc shell-kommandoer)
+- [ ] Mindst én test for hvert grænsetilfælde (tomt input, ugyldige værdier, fejlstier) — ikke kun happy path
+- [ ] Tests er deterministiske (ingen tilfældighed, systemtid mockes, ingen afhængighed mellem tests)
+- [ ] Projektets test-kommando passerer rent (`cargo test`, `uv run pytest`, eller tilsvarende)
+- [ ] Integration tests prioriteres over mocks for database-/IO-logik
+
+**Dokumentation:**
+- [ ] `AGENTS.md` opdateret i samme commit, hvis ændringen påvirker stack, kommandoer eller ikke-åbenlyse detaljer
+- [ ] README / brugervendte docs opdateret hvis brugerflader (CLI-flag, slash-kommandoer, output-format) ændres
+- [ ] Kommentarer kun til det ikke-åbenlyse — skjulte constraints, workarounds, invarianter. Ikke "hvad gør koden"
+- [ ] ADR i `~/projects/adrs/` ved arkitektoniske valg, linket fra `AGENTS.md`
+
+**Sikkerhed:**
+- [ ] Hver `unsafe`-blok har en SAFETY-kommentar der forklarer hvorfor den er sikker
+- [ ] Ingen hemmeligheder (API-nøgler, tokens) committed; brug env-vars eller config-filer ekskluderet via `.gitignore`
+
 ## Test
 
 ### Tests skrives som kode — aldrig som engangskommandoer
