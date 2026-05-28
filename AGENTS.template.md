@@ -5,15 +5,19 @@ This file provides guidance to AI coding agents working in this repository.
 ## Generelle guidelines
 
 <!-- Inkludér de guidelines der er relevante for projektet. Fjern de andre. -->
+@.guidelines/testing-strategy.md
+@.guidelines/testing-and-docs.md
+@.guidelines/open-source.md
 @.guidelines/security.md
+@.guidelines/process.md
+@.guidelines/knowledge-management.md
+<!-- Stack-specifikke — inkludér kun de relevante: -->
 @.guidelines/rust-axum.md
 @.guidelines/webrtc.md
 @.guidelines/web-frontend.md
-@.guidelines/testing-and-docs.md
-@.guidelines/process.md
-@.guidelines/knowledge-management.md
-@.guidelines/claude-code.md
 @.guidelines/ansible-deploy.md
+<!-- Kun ved brug af Claude Code: -->
+@.guidelines/claude-code.md
 
 ---
 

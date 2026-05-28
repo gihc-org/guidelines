@@ -6,11 +6,13 @@ Generelle kodningsregler og mønstre til brug på tværs af projekter. Designet 
 
 | Fil | Indhold |
 |-----|---------|
+| [testing-strategy.md](testing-strategy.md) | Testniveauer, dækningskrav, mocking-principper, OWASP-sikkerhedstests |
+| [open-source.md](open-source.md) | Licens (AGPL-3.0), README, CONTRIBUTING, CHANGELOG, SECURITY |
 | [security.md](security.md) | Argon2id, OWASP, GDPR, CIS Docker, JWT, feature flags |
 | [rust-axum.md](rust-axum.md) | Axum, SQLx, rustls, lib/bin-split, WebSocket-auth |
 | [webrtc.md](webrtc.md) | TURN/STUN, rejoin-håndtering, delt RTCPeerConnection, opkalds-flow |
 | [web-frontend.md](web-frontend.md) | CSS/JS-gotchas, autoplay, MediaStream |
-| [testing-and-docs.md](testing-and-docs.md) | Testniveauer, grænsetilfælde, smoke test, dokumentationspraksis |
+| [testing-and-docs.md](testing-and-docs.md) | AI-vendt commit-tjekliste for test og dokumentation |
 | [process.md](process.md) | Features i TODO før implementering; ADR/guideline-vurdering efter commit |
 | [claude-code.md](claude-code.md) | Claude Code hooks: referat-påmindelse ved sessionslut |
 | [ansible-deploy.md](ansible-deploy.md) | DNS-propagering, Caddy TLS-timing, lokal cache-diagnostik |
