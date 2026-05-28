@@ -9,6 +9,8 @@ This file provides guidance to AI coding agents working in this repository.
 @.guidelines/testing-and-docs.md
 @.guidelines/open-source.md
 @.guidelines/ci-cd.md
+@.guidelines/documentation.md
+@.guidelines/code-review.md
 @.guidelines/security.md
 @.guidelines/process.md
 @.guidelines/knowledge-management.md

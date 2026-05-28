@@ -9,6 +9,8 @@ Generelle kodningsregler og mønstre til brug på tværs af projekter. Designet 
 | [testing-strategy.md](testing-strategy.md) | Testniveauer, dækningskrav, mocking-principper, OWASP-sikkerhedstests |
 | [ci-cd.md](ci-cd.md) | Obligatoriske CI-checks, pipeline-struktur, infra vs. deploy-opdeling |
 | [open-source.md](open-source.md) | Licens (AGPL-3.0), README, CONTRIBUTING, CHANGELOG, SECURITY |
+| [documentation.md](documentation.md) | Hvad dokumenteres hvor: AGENTS.md, README, ADR, inline-kommentarer |
+| [code-review.md](code-review.md) | PR-størrelse, selvreview, definition of done, AI-genererede PRs |
 | [security.md](security.md) | Argon2id, OWASP, GDPR, CIS Docker, JWT, feature flags |
 | [rust-axum.md](rust-axum.md) | Axum, SQLx, rustls, lib/bin-split, WebSocket-auth |
 | [webrtc.md](webrtc.md) | TURN/STUN, rejoin-håndtering, delt RTCPeerConnection, opkalds-flow |
