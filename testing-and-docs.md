@@ -88,6 +88,8 @@ Skriv ikke kommentarer der beskriver hvad koden gør — det gør velnavngivne f
 - Workarounds for specifikke bugs
 - Invarianter der ikke fremgår af typen
 
+Undtagelse: navigerende section headers i shell-scripts (`# ── Konfiguration ──`) er tilladte når scriptet er for langt til at overskues uden dem.
+
 ### ADR ved arkitektoniske valg
 
 Træffes et valg der ikke er oplagt (framework, protokol, dataformat, sikkerhedsstrategi), skrives en ADR i `~/projects/adrs/` og linkes fra `AGENTS.md`. Det forhindrer at den samme diskussion tages igen.
